@@ -1,0 +1,613 @@
+openapi: 3.0.0
+info:
+  title: Quantified Self V2 App
+  contact:
+    email: 21f1003641@student.onlinedegree.iitm.ac.in
+  version: 1.0.0
+servers:
+  - url: http://127.0.0.1:5000/
+paths:
+  /login:
+    post:
+      tags:
+        - Login
+      summary: For Login
+      description: To Login and get Authentication-Token
+      operationId: login
+      parameters:
+        - in: query
+          name: email
+          description: Enter Email
+          required: true
+          schema:
+            type: string
+            example: starcast928@gmail.com
+        - in: query
+          name: password
+          description: Enter Password
+          required: true
+          schema:
+            type: string
+            example: 'He@25#'
+      responses:
+        '200':
+          description: Login Successfully
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  properties:
+                    user_id:
+                      type: integer
+                      example: 1
+                    password:
+                      type: string
+                      example: 'Hello14'
+                    name:
+                      type: string
+                      example: Bhavya
+        '401':
+          description: Incorrect password
+  /forgotpass1:
+    post:
+      tags:
+        - Reset password
+      summary: For password reset
+      description: To Reset Password
+      operationId: forgotpass
+      parameters:
+        - in: query
+          name: email
+          description: Enter Email
+          required: true
+          schema:
+            type: string
+            example: "starcast928@gmail.com"
+      responses:
+        '200':
+          description: Email Verification sent
+        '500':
+          description: Email id Doesn't Exist
+  /verifypass:
+    post:
+      tags:
+        - Reset password
+      summary: For password reset
+      description: To Reset Password
+      operationId: verifypass
+      parameters:
+        - in: query
+          name: otp
+          description: Enter otp
+          required: true
+          schema:
+            type: integer
+            example: '616980'
+      responses:
+        '200':
+          description: Email verified
+        '500':
+          description: otp incorrect
+  /changepass:
+    post:
+      tags:
+        - Reset password
+      summary: For password reset
+      description: To Reset Password
+      operationId: changepass
+      parameters:
+        - in: query
+          name: otp
+          description: Enter otp
+          required: true
+          schema:
+            type: integer
+            example: '578955'
+      responses:
+        '200':
+          description: Password changed successfully
+  /addLog/{uid}/{tid}:
+    post:
+      tags:
+        - Logs
+      summary: Add a new log
+      description: ''
+      operationId: addlog
+      parameters:
+        - in: path
+          name: uid
+          description: ''
+          required: true
+          schema:
+            type: integer
+        - in: path
+          name: tid
+          description: ''
+          required: true
+          schema:
+            type: integer
+        - in: header
+          name: authorization-token
+          description: an authorization header
+          required: true
+          schema:
+            type: string
+        - in: query
+          name: value
+          description: Value to be added
+          required: true
+          schema:
+            type: integer
+            example: '45'
+        - in: query
+          name: note
+          description: ''
+          required: false
+          schema:
+            type: string
+            example: Today was great!
+      responses:
+        '200':
+          description: Log Added Successfully
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  properties:
+                    log_id:
+                      type: integer
+                      example: 1
+                    time:
+                      type: number
+                      example: 2022-09-04T21:49
+                    value:
+                      type: string
+                      example: '45'
+                    note:
+                      type: string
+                      example: Today was hot!!
+                    tracker_id:
+                      type: integer
+                      example: 1
+        '401':
+          description: Token Expired
+  /trackerinfo/{uid}/{tid}:
+    get:
+      tags:
+        - Trackers
+      summary: View a Log
+      description: ''
+      operationId: viewlog
+      parameters:
+        - in: header
+          name: authorization-token
+          description: an authorization header
+          required: true
+          schema:
+            type: string
+        - in: path
+          name: uid
+          description: ''
+          required: true
+          schema:
+            type: integer
+        - in: path
+          name: tid
+          description: ''
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  properties:
+                    log_id:
+                      type: integer
+                      example: 1
+                    time:
+                      type: number
+                      example: 2022-09-04T21:49
+                    value:
+                      type: string
+                      example: '5'
+                    note:
+                      type: string
+                      example: It was an amazing movie
+                    tracker_id:
+                      type: integer
+                      example: 1
+        '401':
+          description: Invalid Token or Token Missing
+  /createtracker/{uid}:
+    post:
+      tags:
+        - Trackers
+      summary: Add a new Tracker
+      description: ''
+      operationId: addtracker
+      parameters:
+        - in: header
+          name: authorization-token
+          description: an authorization header
+          required: true
+          schema:
+            type: string
+        - in: path
+          name: uid
+          description: ''
+          required: true
+          schema:
+            type: integer
+        - in: query
+          name: tracker_name
+          description: ''
+          required: true
+          schema:
+            type: string
+            example: Calories
+        - in: query
+          name: tracker description
+          description: ''
+          required: true
+          schema:
+            type: string
+            example: For measuring the daily calorie intake
+        - in: query
+          name: tracker_type
+          description: Choose Numerical, Multiple Choice or Range based
+          required: true
+          schema:
+            type: string
+            example: Numerical
+        - in: query
+          name: tracker settings
+          description: Fill this only if tracker type is Range based or Multiple Choice
+          required: false
+          schema:
+            type: string
+            example: ''
+        - in: query
+          name: date_created
+          description: The time at which the tracker was created
+          required: true
+          schema:
+            type: number
+            example: 2022-09-04T21:53
+      responses:
+        '200':
+          description: Tracker Added Successfully
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  properties:
+                    Tracker id:
+                      type: integer
+                      example: 1
+                    tracker_name:
+                      type: string
+                      example: Running
+                    tracker_description:
+                      type: string
+                      example: For measuring run distance
+                    tracker_type:
+                      type: string
+                      example: Numerical
+                    tracker_settings:
+                      type: string
+                      example: ''
+                    date_Created:
+                      type: number
+                      example: 1231.21321
+        '401':
+          description: Invalid Token or Token Missing
+  /register:
+    post:
+      tags:
+        - Users
+      summary: Add a new User
+      description: ''
+      operationId: adduser
+      parameters:
+        - in: query
+          name: email
+          description: ''
+          required: true
+          schema:
+            type: string
+            example: "starcast928@gmail.com"
+        - in: query
+          name: password
+          description: ''
+          required: true
+          schema:
+            type: string
+            example: "364100"
+        - in: query
+          name: name
+          description: ''
+          required: true
+          schema:
+            type: string
+            example: "Bhavya"
+      responses:
+        '200':
+          description: User Added Successfully
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  properties:
+                    user_id:
+                      type: integer
+                      example: 1
+                    email:
+                      type: string
+                      example: starcast928@gmail.com
+                    password:
+                      type: string
+                      example: '9595'
+                    name:
+                      type: string
+                      example: Bhavya
+  /updateLog/{lid}/{tid}:
+    post:
+      tags:
+        - Logs
+      summary: Update a Log
+      description: ''
+      operationId: updlog
+      parameters:
+        - in: header
+          name: authorization-token
+          description: an authorization header
+          required: true
+          schema:
+            type: string
+        - in: path
+          name: lid
+          description: ''
+          required: true
+          schema:
+            type: integer
+        - in: path
+          name: tid
+          description: ''
+          required: true
+          schema:
+            type: integer
+        - in: query
+          name: time
+          description: ''
+          required: false
+          schema:
+            type: number
+            example: 2022-09-04T21:52
+        - in: query
+          name: value
+          description: Value to be added
+          required: true
+          schema:
+            type: integer
+            example: '5'
+        - in: query
+          name: note
+          description: Note to be added
+          required: false
+          schema:
+            type: string
+            example: I enjoyed running today
+      responses:
+        '200':
+          description: Log Updated Successfully
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  properties:
+                    log_id:
+                      type: integer
+                      example: 1
+                    time:
+                      type: number
+                      example: 2022-09-04T21:51
+                    value:
+                      type: string
+                      example: '5'
+                    note:
+                      type: string
+                      example: I enjoyed running today
+                    tracker_id:
+                      type: integer
+                      example: 1
+        '401':
+          description: Invalid Token or Token Missing
+  /deleteLog/{lid}/{tid}:
+    get:
+      tags:
+        - Logs
+      summary: Delete a log
+      description: ''
+      operationId: dellog
+      parameters:
+        - in: header
+          name: authorization-token
+          description: an authorization header
+          required: true
+          schema:
+            type: string
+        - in: path
+          name: lid
+          description: ''
+          required: true
+          schema:
+            type: integer
+        - in: path
+          name: tid
+          description: ''
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Log Deleted Successfully
+        '401':
+          description: Invalid Token or Token Missing
+  /trackers/update/{id}:
+    post:
+      tags:
+        - Trackers
+      summary: Update a Tracker
+      description: ''
+      operationId: updtracker
+      parameters:
+        - in: header
+          name: authorization-token
+          description: an authorization header
+          required: true
+          schema:
+            type: string
+        - in: path
+          name: id
+          description: ''
+          required: true
+          schema:
+            type: integer
+            example: 1
+        - in: query
+          name: tracker_name
+          description: ''
+          required: false
+          schema:
+            type: string
+            example: Humidity
+        - in: query
+          name: description
+          description: ''
+          required: false
+          schema:
+            type: string
+            example: For Measuring Everyday Humidity
+        - in: query
+          name: date_created
+          description: ''
+          required: false
+          schema:
+            type: number
+            example: 2022-09-04T21:53
+      responses:
+        '200':
+          description: Tracker Updated Successfully
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  properties:
+                    Tracker id:
+                      type: integer
+                      example: 1
+                    Tracker Name:
+                      type: string
+                      example: Humidity
+                    Description:
+                      type: string
+                      example: For Measuring Everyday Humidity
+                    Tracker Type:
+                      type: string
+                      example: Numerical
+                    Setting:
+                      type: string
+                      example: ''
+                    User id:
+                      type: integer
+                      example: 1
+                    Timestamp:
+                      type: number
+                      example: 2022-09-04T21:54
+        '401':
+          description: Invalid Token or Token is Missing
+  /trackers/delete/{id}:
+    get:
+      tags:
+        - Trackers
+      summary: Delete a Tracker
+      description: ''
+      operationId: deltracker
+      parameters:
+        - in: header
+          name: authorization-token
+          description: an authorization header
+          required: true
+          schema:
+            type: string
+        - in: path
+          name: id
+          description: ''
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Tracker Deleted Successfully
+        '401':
+          description: Invalid Token or Token Missing
+  /exporttracker/{id}:
+    get:
+      tags:
+        - Trackers
+      summary: Export All trackers
+      description: ''
+      operationId: Export Trackers
+      parameters:
+        - in: header
+          name: authorization-token
+          description: an authorization header
+          required: true
+          schema:
+            type: string
+        - in: path
+          name: id
+          description: ''
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  properties:
+                    tracker_id:
+                      type: integer
+                      example: 1
+                    tracker_name:
+                      type: string
+                      example: Running
+                    tracker_description:
+                      type: string
+                      example: For measuring run distance
+                    tracker_type:
+                      type: string
+                      example: Numerical
+                    tracker_settings:
+                      type: string
+                      example: ''
+                    date_Created:
+                      type: number
+                      example: 2022-09-04T21:53
+        '401':
+          description: Invalid Token or Token Missing
